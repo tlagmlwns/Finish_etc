@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>모스부호해독</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+    <img class="mb-4"
+        src="https://mblogthumb-phinf.pstatic.net/MjAxOTA4MjhfODMg/MDAxNTY2OTk3NDk2MDM2.Q8-LmL-OnnhfhhEvgsjs4yg4kU04tEFwIiiUgwHD9zYg.R93wojWYtUXvQs9nS9B2o_tbKSat7ccWH2rtZsmbb_gg.JPEG.jtj4454/movie_image.jpg?type=w800"
+        alt="">
+
+    <form class="form-signin" action="/morse_decoding" method="POST">
+
+        <h1 class="h3 mb-3 font-weight-normal">모스 부호</h1>
+        <label for="inputMorse" class="sr-only">입력해 주세요</label>
+        <input type="text" name="inputMorse" id="inputMorse" class="form-control" required autofocus>
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="해독">
+        
+        <div id="result" style="font-size: large">{{ result }}</div>
+    </form>
+</body>
+
+</html>

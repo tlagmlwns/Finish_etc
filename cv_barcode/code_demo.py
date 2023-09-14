@@ -2,6 +2,7 @@ from pyzbar.pyzbar import decode #바코드 디코딩 라이브러리
 from PIL import Image
 import cv2, qrcode
 import numpy as np
+import normal_cap, timer_cap
 
 def QRcode_detection(image_path): #QR_code test
     qr_code_image = cv2.imread(image_path)
@@ -61,17 +62,27 @@ def search_item(barcode_data): #Web scraping
     print("-물건 정보 : " + url)
     
 def main(): #test_main
+    image_path=""
     while True:
         print("-코드 경로 테스트 입니다.\n")
+        print("-모드 설정: 1. 사진캡쳐 | 2. 사진업로드  >> ", end="")
+        q1 = int(input())
+        if q1 == 1:
+            print("-타이머 설정: 1.O | 2.X  >> ", end="")
+            q2 = int(input())
+            if q2 == 1:
+                timer_cap.timer_main()
+            else:
+                normal_cap.nor_main()
         print("[1. Barcode 2. QRcode 3.나가기(q or Q)]")
         print("-선택하시오 >> ",end="")
         choice = str(input())
         if choice == '1':
-            image_path = 'image\\barcode\\cvbook.jpg' #바코드 경로
+            image_path = input("-사진이름을 입력하시오 : ")
             Barcode_detection(image_path)
             break
         elif choice == '2':
-            image_path = input("사진이름을 입력하시오 : ") #QR 경로
+            image_path = input("-사진이름을 입력하시오 : ")
             QRcode_detection(image_path)
             break
         elif choice == 'q' or choice == 'Q':

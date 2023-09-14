@@ -1,6 +1,5 @@
 import cv2
 import time
-import datetime
 
 # 화면을 띄우는 함수
 def show_screen_for_seconds(seconds):
@@ -24,20 +23,20 @@ def show_screen_for_seconds(seconds):
 
     cap.release()
     cv2.destroyAllWindows()
+    
+def timer_main():
+    s = int(input("-타이머 입력하시오 : "))
+    show_screen_for_seconds(s)
 
-# s초 동안 화면 표시
-s = int(input("타이머 입력하시오 : "))
-show_screen_for_seconds(s)
+    # 화면 캡처
+    cap = cv2.VideoCapture(cv2.CAP_DSHOW + 0)  # 웹캠을 사용하는 경우 0을 사용, 기타 입력 소스를 사용하려면 변경
+    ret, frame = cap.read()
 
-# 화면 캡처
-cap = cv2.VideoCapture(cv2.CAP_DSHOW + 0)  # 웹캠을 사용하는 경우 0을 사용, 기타 입력 소스를 사용하려면 변경
-ret, frame = cap.read()
+    print("-저장할 이미지 이름을 작성 >> ", end="")
+    Name = str(input())
+    file_path = Name+".jpg"
 
-cur_time = datetime.datetime.now()
-CTN = cur_time.strftime("%y%m%d%S") 
-file_path = "cp"+CTN+".jpg" #현재시간으로 이름 저장
-
-cv2.imwrite(file_path, frame)
-# 리소스 해제
-cap.release()
-cv2.destroyAllWindows()
+    cv2.imwrite(file_path, frame)
+    # 리소스 해제
+    cap.release()
+    cv2.destroyAllWindows()

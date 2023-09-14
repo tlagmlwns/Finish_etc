@@ -5,44 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" 
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <title>QR and Barcode Detection</title>
+    <title>Document</title>
 </head>
 <body>
-    <h2 style="padding:15px;">QR and Barcode Detection</h2>
+    <h2 style="padding:15px;">이름이 미정</h2>
     <div style="padding:20px">
-        <form method="POST" action="/detect" enctype="multipart/form-data">
-            <h3>1. Select an Image</h3>
+        <form method="POST" action="/detect" id="codeForm">
+            <h3>1. 사진 선택</h3>
             <div>
-                <input class="form-control" style="font-size: 1rem" type="file" name="file"
-                        onchange="previewImage(event)" id="image" accept=".jpg, .jpeg, .png">
-                <br>
-                <div style="padding-top: 10px">
-                    <img width="25%" height="25%" id="preview" src="#" alt="이미지 미리보기">
-                </div>
+        	    <input class="form-control" style="font-size: 1rem" type="file" id="image" onchange="previewImage(event)" accept=".jpg, .jpeg, .png">
+        	    <br>
+        	    <div style="padding-top: 10px">
+            	    <img width="25%" height="25%" id="preview" src="#" alt="이미지 미리보기">
+        	    </div>
             </div>
             <hr>
-            <h3>2. Choose Detection Type</h3>
+            <h3>2. 코드 선택</h3>
             <div style="display:flex; padding:20px">
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" value="detect_bar_code" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio1">Barcode</label>
+            	<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                	<input type="radio" class="btn-check" name="btnradio" 
+                       	id="btnradio1" value="detect_bar_code" autocomplete="off" checked>
+                	<label class="btn btn-outline-primary" for="btnradio1">Barcode</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" value="detect_qr_code" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio2">QRcode</label>
+                	<input type="radio" class="btn-check" name="btnradio"
+                       	id="btnradio2" value="detect_qr_code" autocomplete="off" checked>
+                	<label class="btn btn-outline-primary" for="btnradio2">QRcode</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" value="detect_etc_code" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio3">etccode</label>
+                	<input type="radio" class="btn-check" name="btnradio" 
+                       	id="btnradio3" value="detect_etc_code" autocomplete="off" checked>
+                	<label class="btn btn-outline-primary" for="btnradio3">etccode</label>
                 </div>
-                <div style="padding-left:20px">
-                    <button id="send" type="submit" class="btn btn-primary">Detect</button>
-                    <button id="clear" type="button" class="btn btn-danger" onclick="clearImagePreview()">Clear</button>
-                </div>
+                <div style="padding-left:20px" width="auto">
+        			<button id="send" type="button" class="btn btn-primary" onclick="submitForm()">확인</button>
+        			<button id="clear" type="button" class="btn btn-danger">취소</button>
+        		</div>
             </div>
         </form>
         <hr>
-        <h3>3. Detection Result</h3>
-        <div style="background-color: #f2f2f2; border-radius: 20px; padding: 20px;">
-            <iframe src=""></iframe>
+        <h3>3. 결과</h3>
+        <div style="background-color: #f2f2f2; border-radius: 20px; padding: 20px;" width="100%" height="100%">
+        	<div id="resultDiv">
+                <!-- 결과가 여기에 표시됩니다. -->
+            </div>
         </div>
     </div>
 </body>
@@ -52,9 +56,51 @@
         preview.src = URL.createObjectURL(event.target.files[0]);
     }
 
-    function clearImagePreview() {
-        document.getElementById('image').value = "";
-        document.getElementById('preview').src = "#";
+    function submitForm() {
+        var form = document.getElementById("codeForm");
+        var action = form.querySelector('input[name="btnradio"]:checked').value;
+        form.action = "/detect?btnradio=" + action;
+        form.submit();
+    }
+
+    // URL을 받아와서 <iframe>의 src에 설정하는 함수
+    function setIframeSrc(url) {
+        var iframe = document.getElementById('resultFrame');
+        iframe.src = url;
+    }
+    // 확인 버튼 클릭 시 호출될 함수
+    function submitForm() {
+        // 선택한 라디오 버튼 값 가져오기
+        var selectedRadio = document.querySelector('input[name="btnradio"]:checked').value;
+        
+        // AJAX 요청 보내기
+        fetch('/detect', {
+            method: 'POST',
+            body: JSON.stringify({ action: selectedRadio }), // 선택한 라디오 값을 전달
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 서버에서 반환한 결과를 처리
+            if (data.result) {
+                // 결과를 표시하거나 다른 동작을 수행
+                // 예를 들어, 결과를 <iframe>의 src에 설정
+                setIframeSrc(data.result);
+            } else {
+                alert('No code data found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // URL을 받아와서 <iframe>의 src에 설정하는 함수
+    function displayResult(result) {
+        var resultDiv = document.getElementById('resultDiv');
+        resultDiv.innerHTML = result;
     }
 </script>
 </html>

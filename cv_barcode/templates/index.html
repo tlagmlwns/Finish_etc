@@ -187,7 +187,7 @@
         <form method="POST" action="/detect">
             <h3>1. 사진 선택</h3>
             <div>
-            	<button id="send" type="button" class="btn btn-primary">사진캡쳐</button>
+            	<button id="capture" type="button" class="btn btn-primary">사진캡쳐</button>
                 <br>
         	    <input  style="margin-top:10px" class="form-control" style="font-size: 1rem" type="file" id="image" onchange="previewImage(event)" accept=".jpg, .jpeg, .png">
         	    <br>
@@ -245,10 +245,32 @@
 
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <script>
-    function previewImage(event) {
-        var preview = document.getElementById('preview');
-        preview.src = URL.createObjectURL(event.target.files[0]);
-    }
+  function previewImage(event) {
+    var preview = document.getElementById('preview');
+    preview.src = URL.createObjectURL(event.target.files[0]);
+  }
+  function clearImagePreview() {
+    document.getElementById('image').value = "";
+    document.getElementById('preview').src = "#";
+  }
+  function submitForm() {
+    var form = document.getElementById("codeForm");
+    var action = form.querySelector('input[name="btnradio"]:checked').value;
+    form.action = "/detect?btnradio=" + action;
+    form.submit();
+  }
+  function setIframeSrc(url) {
+    var iframe = document.getElementById('resultFrame');
+    iframe.src = url;
+  }
+  document.getElementById("capture").addEventListener("click", function() {// 버튼 클릭 시 
+    //my_function/ID 경로로 요청을 보냄
+    fetch('/my_function/123')  // 여기서 123을 원하는 ID로 변경
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+        });
+});
 </script>
 </body>
 </html>

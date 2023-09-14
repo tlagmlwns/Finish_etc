@@ -15,7 +15,7 @@ def QRcode_detection(image_path): #QR_code test
                 hull = cv2.convexHull(np.array([point for point in points], dtype=np.float32))
                 points = hull
             points = np.array(points, dtype=np.int32)
-            cv2.polylines(qr_code_image, [points], isClosed=True, color=(0, 0, 255), thickness=20)
+            cv2.polylines(qr_code_image, [points], isClosed=True, color=(0, 0, 255), thickness=15)
             
             qr_code_data = obj.data.decode('utf-8') #QR코드 정보
             print("QR코드 추출중...")
@@ -40,7 +40,7 @@ def Barcode_detection(image_path): #Bar_code test
                 hull = cv2.convexHull(np.array([point for point in points], dtype=np.float32))
                 points = hull
             points = np.array(points, dtype=np.int32)
-            cv2.polylines(image, [points], isClosed=True, color=(0, 0, 255), thickness=20)
+            cv2.polylines(image, [points], isClosed=True, color=(0, 0, 255), thickness=15)
             
             barcode_data = obj.data.decode('utf-8') #바코드 타입
             barcode_type = obj.type #바코드 번호
@@ -65,17 +65,21 @@ def main(): #test_main
     image_path=""
     while True:
         print("-코드 경로 테스트 입니다.\n")
-        print("-모드 설정: 1. 사진캡쳐 | 2. 사진업로드  >> ", end="")
-        q1 = int(input())
-        if q1 == 1:
-            print("-타이머 설정: 1.O | 2.X  >> ", end="")
+        print("-모드 설정: 1. 사진캡쳐 | 2. 사진업로드 | 3. 종료 ")
+        print("-선택 >> ",end="")
+        q1 = str(input())
+        if q1 == '1':
+            print("-타이머 설정: 1.O | 2.X >> ", end="")
             q2 = int(input())
             if q2 == 1:
                 timer_cap.timer_main()
             else:
                 normal_cap.nor_main()
-        print("[1. Barcode 2. QRcode 3.나가기(q or Q)]")
-        print("-선택하시오 >> ",end="")
+        if q1 == '3':
+            print("-종료합니다.")
+            break
+        print("-바코드 설정: 1. Barcode | 2. QRcode | 3. 종료 ")
+        print("-선택 >> ",end="")
         choice = str(input())
         if choice == '1':
             image_path = input("-사진이름을 입력하시오 : ")
@@ -91,5 +95,3 @@ def main(): #test_main
         else:
             print("-해당되는 번호가 없습니다.\n다시 입력하시오.")
             continue
-
-main()
